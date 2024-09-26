@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Invengo.Library.APP452
 {
-    public class TagHelper : IDisposable
+    public class AlgorithmHelper : IDisposable
     {
         private IntPtr _native;
 
@@ -54,7 +54,7 @@ namespace Invengo.Library.APP452
 
         #region Constructor and Destructor
 
-        private TagHelper(int antenna, string epc, double rssi,int readcount)
+        private AlgorithmHelper(int antenna, string epc, double rssi,int readcount)
         {
             _native = CreateTag(antenna, epc, rssi, readcount);
         }
@@ -97,7 +97,7 @@ namespace Invengo.Library.APP452
             return CreateTags();
         }
 
-        private static void AddToCollection(IntPtr collection, TagHelper tag)
+        private static void AddToCollection(IntPtr collection, AlgorithmHelper tag)
         {
             if (tag == null || collection == IntPtr.Zero)
                 throw new ArgumentNullException();
@@ -105,10 +105,10 @@ namespace Invengo.Library.APP452
             AddTag(collection, tag._native);
         }
 
-        private static List<TagHelper> ConvertToList(IntPtr tagCollection)
+        private static List<AlgorithmHelper> ConvertToList(IntPtr tagCollection)
         {
             int size = GetTagsSize(tagCollection);
-            var taghelper = new List<TagHelper>(size);
+            var taghelper = new List<AlgorithmHelper>(size);
 
             for (int i = 0; i < size; i++)
             {
@@ -117,7 +117,7 @@ namespace Invengo.Library.APP452
                 string name = Marshal.PtrToStringAnsi(GetTagEpc(tagPtr));
                 double score = GetTagRssi(tagPtr);
                 int readcount = GetTagReadCount(tagPtr);
-                taghelper.Add(new TagHelper(id, name, score, readcount));
+                taghelper.Add(new AlgorithmHelper(id, name, score, readcount));
             }
             return taghelper;
         }
@@ -134,7 +134,7 @@ namespace Invengo.Library.APP452
             IntPtr tags_old = CreateCollection();
             foreach (var item in input)
             {
-                var tag = new TagHelper(item.Antenna, item.Epc, item.RSSI, item.ReadCount);
+                var tag = new AlgorithmHelper(item.Antenna, item.Epc, item.RSSI, item.ReadCount);
                 AddToCollection(tags_old, tag);
             }
             IntPtr tags_analyze = AnalyzeTags(tags_old, min, max);

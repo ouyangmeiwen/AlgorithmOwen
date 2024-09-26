@@ -194,7 +194,7 @@ namespace Invengo.Library.APP452
             }
             if (true)
             {
-                var result = TagHelper.AnalyzeTags(new List<TagDto>()
+                var result = AlgorithmHelper.AnalyzeTags(new List<TagDto>()
                 {
                     new TagDto(){ Antenna=1,Epc="A",RSSI=-50,ReadCount=1 },
                     new TagDto(){ Antenna=1,Epc="A",RSSI=-54,ReadCount=2 },
@@ -212,7 +212,7 @@ namespace Invengo.Library.APP452
                     new TagDto(){ Antenna=12,Epc="B",RSSI=-43,ReadCount=21 },
                     new TagDto(){ Antenna=12,Epc="B",RSSI=-44 ,ReadCount=22},
                     new TagDto(){ Antenna=12,Epc="B",RSSI=-49,ReadCount=25 }
-                }, -45.34, 0);
+                },-45, 0);
 
                 foreach (var r in result)
                 {

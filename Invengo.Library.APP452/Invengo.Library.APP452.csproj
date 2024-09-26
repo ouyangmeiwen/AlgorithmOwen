@@ -49,7 +49,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TagDto.cs" />
-    <Compile Include="TagHelper.cs" />
+    <Compile Include="AlgorithmHelper.cs" />
     <Compile Include="Student.cs" />
   </ItemGroup>
   <ItemGroup>
