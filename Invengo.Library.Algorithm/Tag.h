@@ -12,10 +12,11 @@ extern "C" {
 
     typedef struct Tag Tag;
 
-    MYLIBRARY_API Tag* CreateTag(int antenna, const char* epc, double rssi);
+    MYLIBRARY_API Tag* CreateTag(int antenna, const char* epc, double rssi,int readcount);
     MYLIBRARY_API int GetTagAnt(Tag* Tag);
     MYLIBRARY_API const char* GetTagEpc(Tag* Tag);
     MYLIBRARY_API double GetTagRssi(Tag* Tag);
+    MYLIBRARY_API int GetTagReadCount(Tag* Tag);
     MYLIBRARY_API void DestroyTag(Tag* Tag);
 
     MYLIBRARY_API std::vector<Tag*>* CreateTags();
@@ -23,6 +24,6 @@ extern "C" {
     MYLIBRARY_API Tag* GetTag(std::vector<Tag*>* collection, int index);
     MYLIBRARY_API int GetTagsSize(std::vector<Tag*>* collection);
     MYLIBRARY_API void DestroyTags(std::vector<Tag*>* collection);
-    MYLIBRARY_API std::vector<Tag*>* AnalyzeTags(std::vector<Tag*>* collection);
+    MYLIBRARY_API std::vector<Tag*>* AnalyzeTags(std::vector<Tag*>* collection,double min,double max);
 
 }

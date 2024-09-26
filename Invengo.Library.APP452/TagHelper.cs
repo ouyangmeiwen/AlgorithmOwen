@@ -14,7 +14,7 @@ namespace Invengo.Library.APP452
         #region DllImports
 
         [DllImport("Invengo.Library.Algorithm.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr CreateTag(int antenna, string epc, double rssi);
+        private static extern IntPtr CreateTag(int antenna, string epc, double rssi, int readcount);
 
         [DllImport("Invengo.Library.Algorithm.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern int GetTagAnt(IntPtr tag);
@@ -24,6 +24,9 @@ namespace Invengo.Library.APP452
 
         [DllImport("Invengo.Library.Algorithm.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern double GetTagRssi(IntPtr tag);
+
+        [DllImport("Invengo.Library.Algorithm.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int GetTagReadCount(IntPtr tag);
 
         [DllImport("Invengo.Library.Algorithm.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern void DestroyTag(IntPtr tag);
@@ -44,16 +47,16 @@ namespace Invengo.Library.APP452
         private static extern void DestroyTags(IntPtr collection);
 
         [DllImport("Invengo.Library.Algorithm.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr AnalyzeTags(IntPtr collection);
+        private static extern IntPtr AnalyzeTags(IntPtr collection, double min, double max);
 
 
         #endregion
 
         #region Constructor and Destructor
 
-        private TagHelper(int antenna, string epc, double rssi)
+        private TagHelper(int antenna, string epc, double rssi,int readcount)
         {
-            _native = CreateTag(antenna, epc, rssi);
+            _native = CreateTag(antenna, epc, rssi, readcount);
         }
 
         public void Dispose()
@@ -83,6 +86,8 @@ namespace Invengo.Library.APP452
 
         private double Rssi => _native == IntPtr.Zero ? -1.0f : GetTagRssi(_native);
 
+
+        private int ReadCount => _native == IntPtr.Zero ? -1 : GetTagReadCount(_native);
         #endregion
 
         #region Static Methods for TagHelper Collection
@@ -107,11 +112,12 @@ namespace Invengo.Library.APP452
 
             for (int i = 0; i < size; i++)
             {
-                IntPtr studentPtr = GetTag(tagCollection, i);
-                int id = GetTagAnt(studentPtr);
-                string name = Marshal.PtrToStringAnsi(GetTagEpc(studentPtr));
-                double score = GetTagRssi(studentPtr);
-                taghelper.Add(new TagHelper(id, name, score));
+                IntPtr tagPtr = GetTag(tagCollection, i);
+                int id = GetTagAnt(tagPtr);
+                string name = Marshal.PtrToStringAnsi(GetTagEpc(tagPtr));
+                double score = GetTagRssi(tagPtr);
+                int readcount = GetTagReadCount(tagPtr);
+                taghelper.Add(new TagHelper(id, name, score, readcount));
             }
             return taghelper;
         }
@@ -123,15 +129,15 @@ namespace Invengo.Library.APP452
                 DestroyTags(collection);
             }
         }
-        public static List<TagDto> AnalyzeTags(List<TagDto> input)
+        public static List<TagDto> AnalyzeTags(List<TagDto> input, double min, double max)
         {
             IntPtr tags_old = CreateCollection();
             foreach (var item in input)
             {
-                var tag = new TagHelper(item.Antenna, item.Epc, item.RSSI);
+                var tag = new TagHelper(item.Antenna, item.Epc, item.RSSI, item.ReadCount);
                 AddToCollection(tags_old, tag);
             }
-            IntPtr tags_analyze = AnalyzeTags(tags_old);
+            IntPtr tags_analyze = AnalyzeTags(tags_old, min, max);
             var lst = ConvertToList(tags_analyze);
             DestroyCollection(tags_old);
             DestroyCollection(tags_analyze);
@@ -139,7 +145,8 @@ namespace Invengo.Library.APP452
             {
                 Antenna = x.Antenna,
                 Epc = x.Epc,
-                RSSI = Math.Round(x.Rssi, 2)
+                RSSI = Math.Round(x.Rssi, 2),
+                ReadCount=x.ReadCount
             }).ToList();
             return result;
         }

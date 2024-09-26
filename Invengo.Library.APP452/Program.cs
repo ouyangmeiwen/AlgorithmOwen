@@ -194,29 +194,29 @@ namespace Invengo.Library.APP452
             }
             if (true)
             {
-                var result=TagHelper.AnalyzeTags(new List<TagDto>()
+                var result = TagHelper.AnalyzeTags(new List<TagDto>()
                 {
-                    new TagDto(){ Antenna=1,Epc="A",RSSI=-50 },
-                    new TagDto(){ Antenna=1,Epc="A",RSSI=-54 },
-                    new TagDto(){ Antenna=1,Epc="A",RSSI=-52 },
+                    new TagDto(){ Antenna=1,Epc="A",RSSI=-50,ReadCount=1 },
+                    new TagDto(){ Antenna=1,Epc="A",RSSI=-54,ReadCount=2 },
+                    new TagDto(){ Antenna=1,Epc="A",RSSI=-52 ,ReadCount=3},
 
-                    new TagDto(){ Antenna=2,Epc="A",RSSI=-43 },
-                    new TagDto(){ Antenna=2,Epc="A",RSSI=-44 },
-                    new TagDto(){ Antenna=2,Epc="A",RSSI=-49 },
+                    new TagDto(){ Antenna=2,Epc="A",RSSI=-43 ,ReadCount=11},
+                    new TagDto(){ Antenna=2,Epc="A",RSSI=-44 ,ReadCount=12},
+                    new TagDto(){ Antenna=2,Epc="A",RSSI=-49 ,ReadCount=13},
 
 
-                    new TagDto(){ Antenna=11,Epc="B",RSSI=-50 },
-                    new TagDto(){ Antenna=11,Epc="B",RSSI=-54 },
-                    new TagDto(){ Antenna=11,Epc="B",RSSI=-52 },
+                    new TagDto(){ Antenna=11,Epc="B",RSSI=-50,ReadCount=1 },
+                    new TagDto(){ Antenna=11,Epc="B",RSSI=-54,ReadCount=1 },
+                    new TagDto(){ Antenna=11,Epc="B",RSSI=-52,ReadCount=1 },
 
-                    new TagDto(){ Antenna=12,Epc="B",RSSI=-43 },
-                    new TagDto(){ Antenna=12,Epc="B",RSSI=-44 },
-                    new TagDto(){ Antenna=12,Epc="B",RSSI=-49 },
-                });
+                    new TagDto(){ Antenna=12,Epc="B",RSSI=-43,ReadCount=21 },
+                    new TagDto(){ Antenna=12,Epc="B",RSSI=-44 ,ReadCount=22},
+                    new TagDto(){ Antenna=12,Epc="B",RSSI=-49,ReadCount=25 }
+                }, -45.34, 0);
 
                 foreach (var r in result)
                 {
-                    Console.WriteLine($"Antenna: {r.Antenna}，" + $"Epc: {r.Epc}, RSSI: {r.RSSI}");
+                    Console.WriteLine($"Antenna: {r.Antenna}，" + $"Epc: {r.Epc}, RSSI: {r.RSSI},ReadCount:{r.ReadCount}");
                 }
             }
             Console.ReadLine();
