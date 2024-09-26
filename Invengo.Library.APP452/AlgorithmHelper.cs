@@ -129,7 +129,7 @@ namespace Invengo.Library.APP452
                 DestroyTags(collection);
             }
         }
-        public static List<TagDto> AnalyzeTags(List<TagDto> input, double min, double max)
+        public static List<TagDto> AnalyzeTags(List<TagDto> input, double? min, double? max)
         {
             IntPtr tags_old = CreateCollection();
             foreach (var item in input)
@@ -137,7 +137,7 @@ namespace Invengo.Library.APP452
                 var tag = new AlgorithmHelper(item.Antenna, item.Epc, item.RSSI, item.ReadCount);
                 AddToCollection(tags_old, tag);
             }
-            IntPtr tags_analyze = AnalyzeTags(tags_old, min, max);
+            IntPtr tags_analyze = AnalyzeTags(tags_old, min ?? double.MinValue, max ?? double.MaxValue);
             var lst = ConvertToList(tags_analyze);
             DestroyCollection(tags_old);
             DestroyCollection(tags_analyze);
