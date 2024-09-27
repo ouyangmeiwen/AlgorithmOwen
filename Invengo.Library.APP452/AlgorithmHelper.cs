@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Invengo.Library.APP452
 {
-    public class AlgorithmHelper : IDisposable
+    public partial class AlgorithmHelper : IDisposable
     {
         private IntPtr _native;
 
