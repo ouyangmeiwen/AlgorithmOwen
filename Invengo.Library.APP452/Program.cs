@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Invengo.Library.APP452
 {
@@ -196,27 +192,27 @@ namespace Invengo.Library.APP452
             {
                 var result = AlgorithmHelper.AnalyzeTags(new List<TagDto>()
                 {
-                    new TagDto(){ Antenna=1,Epc="A",RSSI=-50,ReadCount=1 },
-                    new TagDto(){ Antenna=1,Epc="A",RSSI=-54,ReadCount=2 },
-                    new TagDto(){ Antenna=1,Epc="A",RSSI=-52 ,ReadCount=3},
+                    new TagDto(){ Antenna=1,Epc="A",RSSI=-50,ReadCount=1,Name="弱标" },
+                    new TagDto(){ Antenna=1,Epc="A",RSSI=-54,ReadCount=2,Name="弱标" },
+                    new TagDto(){ Antenna=1,Epc="A",RSSI=-52 ,ReadCount=3,Name="弱标"},
 
-                    new TagDto(){ Antenna=2,Epc="A",RSSI=-43 ,ReadCount=11},
-                    new TagDto(){ Antenna=2,Epc="A",RSSI=-44 ,ReadCount=12},
-                    new TagDto(){ Antenna=2,Epc="A",RSSI=-49 ,ReadCount=13},
+                    new TagDto(){ Antenna=2,Epc="A",RSSI=-43 ,ReadCount=11,Name="强标"},
+                    new TagDto(){ Antenna=2,Epc="A",RSSI=-44 ,ReadCount=12,Name="强标"},
+                    new TagDto(){ Antenna=2,Epc="A",RSSI=-49 ,ReadCount=13,Name="强标"},
 
 
-                    new TagDto(){ Antenna=11,Epc="B",RSSI=-50,ReadCount=1 },
-                    new TagDto(){ Antenna=11,Epc="B",RSSI=-54,ReadCount=1 },
-                    new TagDto(){ Antenna=11,Epc="B",RSSI=-52,ReadCount=1 },
+                    new TagDto(){ Antenna=11,Epc="B",RSSI=-50,ReadCount=1,Name="弱标" },
+                    new TagDto(){ Antenna=11,Epc="B",RSSI=-54,ReadCount=1 ,Name="弱标"},
+                    new TagDto(){ Antenna=11,Epc="B",RSSI=-52,ReadCount=1 ,Name="弱标"},
 
-                    new TagDto(){ Antenna=12,Epc="B",RSSI=-43,ReadCount=21 },
-                    new TagDto(){ Antenna=12,Epc="B",RSSI=-44 ,ReadCount=22},
-                    new TagDto(){ Antenna=12,Epc="B",RSSI=-49,ReadCount=25 }
-                },-45, 0);
+                    new TagDto(){ Antenna=12,Epc="B",RSSI=-43,ReadCount=21,Name="强标" },
+                    new TagDto(){ Antenna=12,Epc="B",RSSI=-44 ,ReadCount=22,Name="强标"},
+                    new TagDto(){ Antenna=12,Epc="B",RSSI=-49,ReadCount=25 ,Name="强标"}
+                }, null, null);
 
                 foreach (var r in result)
                 {
-                    Console.WriteLine($"Antenna: {r.Antenna}，" + $"Epc: {r.Epc}, RSSI: {r.RSSI},ReadCount:{r.ReadCount}");
+                    Console.WriteLine($"Antenna: {r.Antenna}，" + $"Epc: {r.Epc}, RSSI: {r.RSSI},ReadCount:{r.ReadCount},强弱标:{r.Name}");
                 }
             }
             Console.ReadLine();

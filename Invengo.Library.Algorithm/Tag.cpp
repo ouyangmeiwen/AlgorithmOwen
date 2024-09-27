@@ -8,26 +8,34 @@
 
 class Tag {
 public:
-    Tag(int antenna, const char* epc, double rssi, int readcount) : antenna(antenna), rssi(rssi),readcount(readcount){
+    Tag(int antenna, const char* epc, double rssi, int readcount,const wchar_t* name) 
+        : antenna(antenna), 
+        rssi(rssi),
+        readcount(readcount){
         strncpy_s(this->epc, epc, sizeof(this->epc) - 1);
         this->epc[sizeof(this->epc) - 1] = '\0'; // Ensure null termination
+
+        wcsncpy_s(this->name, name, sizeof(this->name) / sizeof(this->name[0]) - 1);
+        this->name[sizeof(this->name) / sizeof(this->name[0]) - 1] = L'\0'; // 确保 null 终止
     }
     int GetAnt() const { return antenna; }
     const char* GetEpc() const { return epc; }
     double GetRssi() const { return rssi; }
     int GetReadCount() const { return readcount; }
+    const wchar_t* GetName() const { return name; }
 
 private:
     int antenna;
     char epc[100];
     double rssi;
     int readcount;
+    wchar_t name[100]; //含有中文
 };
 
 extern "C" {
 
-    MYLIBRARY_API Tag* CreateTag(int antenna, const char* epc, double rssi, int readcount) {
-        return new Tag(antenna, epc, rssi, readcount);
+    MYLIBRARY_API Tag* CreateTag(int antenna, const char* epc, double rssi, int readcount, const wchar_t* name) {
+        return new Tag(antenna, epc, rssi, readcount, name);
     }
 
     MYLIBRARY_API int GetTagAnt(Tag* Tag) {
@@ -44,6 +52,10 @@ extern "C" {
 
     MYLIBRARY_API int GetTagReadCount(Tag* Tag) {
         return Tag ? Tag->GetReadCount() : -1;
+    }
+
+    MYLIBRARY_API const wchar_t* GetTagName(Tag* Tag) {
+        return Tag ? Tag->GetName() : L"";
     }
 
     MYLIBRARY_API void DestroyTag(Tag* Tag) {
@@ -97,6 +109,8 @@ extern "C" {
                 int ant_r = 1;
                 double rssi_r = -std::numeric_limits<double>::infinity();
                 int readcount_r = 0;
+                const wchar_t* name_r = L"";
+
                 for (const auto& ant_kv : map_ant_tags) {
                     auto ant = ant_kv.first;                                //单个天线
                     auto tags_ant = ant_kv.second;                          //单个天线的集合
@@ -118,13 +132,14 @@ extern "C" {
                         ant_r = ant;
                         rssi_r = avRssi;
                         readcount_r = avCount;
+                        name_r = tags_ant[0]->GetName();
                     }
                 }
                 if (rssi_r < min)
                     continue;
                 if (rssi_r > max)
                     continue;
-                Tag* tag_r = new Tag(ant_r, epc.c_str(), rssi_r, readcount_r);
+                Tag* tag_r = new Tag(ant_r, epc.c_str(), rssi_r, readcount_r, name_r);
                 newtags->push_back(tag_r);
             }
             return newtags;

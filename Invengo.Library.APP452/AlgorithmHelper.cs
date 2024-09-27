@@ -14,7 +14,7 @@ namespace Invengo.Library.APP452
         #region DllImports
 
         [DllImport("Invengo.Library.Algorithm.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr CreateTag(int antenna, string epc, double rssi, int readcount);
+        private static extern IntPtr CreateTag(int antenna, string epc, double rssi, int readcount,string name);
 
         [DllImport("Invengo.Library.Algorithm.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern int GetTagAnt(IntPtr tag);
@@ -27,6 +27,9 @@ namespace Invengo.Library.APP452
 
         [DllImport("Invengo.Library.Algorithm.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern int GetTagReadCount(IntPtr tag);
+
+        [DllImport("Invengo.Library.Algorithm.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern IntPtr GetTagName(IntPtr tag);
 
         [DllImport("Invengo.Library.Algorithm.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern void DestroyTag(IntPtr tag);
@@ -54,9 +57,9 @@ namespace Invengo.Library.APP452
 
         #region Constructor and Destructor
 
-        private AlgorithmHelper(int antenna, string epc, double rssi,int readcount)
+        private AlgorithmHelper(int antenna, string epc, double rssi,int readcount,string name)
         {
-            _native = CreateTag(antenna, epc, rssi, readcount);
+            _native = CreateTag(antenna, epc, rssi, readcount, name);
         }
 
         public void Dispose()
@@ -79,8 +82,8 @@ namespace Invengo.Library.APP452
             get
             {
                 if (_native == IntPtr.Zero) return string.Empty;
-                IntPtr namePtr = GetTagEpc(_native);
-                return Marshal.PtrToStringAnsi(namePtr) ?? string.Empty;
+                IntPtr epcPtr = GetTagEpc(_native);
+                return Marshal.PtrToStringAnsi(epcPtr) ?? string.Empty;
             }
         }
 
@@ -88,6 +91,16 @@ namespace Invengo.Library.APP452
 
 
         private int ReadCount => _native == IntPtr.Zero ? -1 : GetTagReadCount(_native);
+
+        private string Name
+        {
+            get
+            {
+                if (_native == IntPtr.Zero) return string.Empty;
+                IntPtr namePtr = GetTagName(_native);
+                return Marshal.PtrToStringAnsi(namePtr) ?? string.Empty;
+            }
+        }
         #endregion
 
         #region Static Methods for TagHelper Collection
@@ -113,11 +126,12 @@ namespace Invengo.Library.APP452
             for (int i = 0; i < size; i++)
             {
                 IntPtr tagPtr = GetTag(tagCollection, i);
-                int id = GetTagAnt(tagPtr);
-                string name = Marshal.PtrToStringAnsi(GetTagEpc(tagPtr));
-                double score = GetTagRssi(tagPtr);
+                int ant = GetTagAnt(tagPtr);
+                string epc = Marshal.PtrToStringAnsi(GetTagEpc(tagPtr));
+                double rssi = GetTagRssi(tagPtr);
                 int readcount = GetTagReadCount(tagPtr);
-                taghelper.Add(new AlgorithmHelper(id, name, score, readcount));
+                string name = Marshal.PtrToStringAnsi(GetTagName(tagPtr));
+                taghelper.Add(new AlgorithmHelper(ant, epc, rssi, readcount, name));
             }
             return taghelper;
         }
@@ -134,7 +148,7 @@ namespace Invengo.Library.APP452
             IntPtr tags_old = CreateCollection();
             foreach (var item in input)
             {
-                var tag = new AlgorithmHelper(item.Antenna, item.Epc, item.RSSI, item.ReadCount);
+                var tag = new AlgorithmHelper(item.Antenna, item.Epc, item.RSSI, item.ReadCount, item.Name);
                 AddToCollection(tags_old, tag);
             }
             IntPtr tags_analyze = AnalyzeTags(tags_old, min ?? double.MinValue, max ?? double.MaxValue);
@@ -146,7 +160,8 @@ namespace Invengo.Library.APP452
                 Antenna = x.Antenna,
                 Epc = x.Epc,
                 RSSI = Math.Round(x.Rssi, 2),
-                ReadCount=x.ReadCount
+                ReadCount = x.ReadCount,
+                Name = x.Name
             }).ToList();
             return result;
         }

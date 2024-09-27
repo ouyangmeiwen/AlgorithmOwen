@@ -35,5 +35,7 @@ namespace Invengo.Library.APP452
         public string barcode { get; set; }
         public int ReadCount { get; set; }
         public DateTime? Time { get; set; }
+
+        public string Name { get; set; }
     }
 }

@@ -5,14 +5,4 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Algorithm\x64\Invengo.Library.Algorithm.dll" />
-    <None Remove="Algorithm\x86\Invengo.Library.Algorithm.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Algorithm\x64\Invengo.Library.Algorithm.dll" />
-    <Content Include="Algorithm\x86\Invengo.Library.Algorithm.dll" />
-  </ItemGroup>
-
 </Project>
