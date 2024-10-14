@@ -6,6 +6,18 @@
 #include <string>
 #include <numeric>
 
+
+
+//strncpy_s：
+//
+//当你需要安全地复制一个固定长度的字符串时，例如从用户输入中获取字符串并存储到一个固定大小的缓冲区中。
+//强调安全性，避免缓冲区溢出。
+//snprintf：
+//
+//当你需要将各种类型的数据格式化为一个字符串时，例如将数值转换为字符串、拼接多个字符串。
+//需要灵活的格式化输出。
+
+
 class Tag {
 public:
     Tag(int antenna, const char* epc, double rssi, int readcount,const wchar_t* name) 
